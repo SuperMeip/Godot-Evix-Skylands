@@ -286,7 +286,8 @@ namespace Evix.Terrain.MeshGeneration {
 
         // mark the chunk mesh data
         Chunk meshedChunk = level.getChunk(adjustment.chunkID);
-        meshedChunk.setMesh(new ChunkMeshData(generatedMesh, generatedVerticies.ToArray()));
+        meshedChunk.setMesh(true, new ChunkMeshData(generatedMesh, generatedVerticies.ToArray()));
+        meshedChunk.unlock(Chunk.Resolution.Meshed);
         World.EventSystem.notifyChannelOf(
           new MeshGenerationAperture.ChunkMeshLoadingFinishedEvent(adjustment),
           EventSystems.WorldEventSystem.Channels.ChunkActivationUpdates

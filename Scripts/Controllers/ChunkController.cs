@@ -35,6 +35,7 @@ namespace Evix.Controllers {
 
     /// <summary>
     /// The current generated mesh
+    /// @TODO: remove this at some point
     /// </summary>
     ArrayMesh generatedMesh;
 
@@ -59,16 +60,11 @@ namespace Evix.Controllers {
     /// Set the chunk to render. Returns true if the data was set up
     /// </summary>
     public void setChunkMesh(Coordinate chunkID, Chunk chunk) {
+      chunkLocation = chunkID;
       generatedMesh = chunk.meshData.arrayMesh;
       Mesh = generatedMesh;
-      createCollider(chunk.meshData.verticies);
-
       isActive = true;
-      chunkLocation = chunkID;
       isMeshed = true;
-
-      chunk.setIsMeshed();
-      chunk.unlock(Chunk.Resolution.Meshed);
     }
 
     /// <summary>
@@ -79,12 +75,15 @@ namespace Evix.Controllers {
     public void setVisible(bool activeState = true) {
       Chunk chunk = levelManager.level.getChunk(chunkLocation);
       if (activeState) {
-        levelManager.AddChild(this);
-        Translation = (chunkLocation.vec3 * MarchingTetsMeshGenerator.BlockSize);
+        //levelManager.AddChild(this);
+        //Translation = (chunkLocation.vec3 * MarchingTetsMeshGenerator.BlockSize);
         chunk.setVisible();
         chunk.unlock(Chunk.Resolution.Visible);
+        /*if (collider == null) {
+          createCollider(Mesh.GetFaces());
+        }*/
       } else {
-        clearCollider();
+        //clearCollider();
         levelManager.RemoveChild(this);
         chunk.setVisible(false);
         chunk.unlock(Chunk.Resolution.Visible);
@@ -100,11 +99,6 @@ namespace Evix.Controllers {
       clearCollider();
       isMeshed = false;
       isActive = false;
-
-      Chunk chunk = levelManager.level.getChunk(chunkLocation);
-      chunk.setIsMeshed(false);
-      chunk.unlock(Chunk.Resolution.Meshed);
-
       chunkLocation = default;
     }
 
@@ -116,6 +110,7 @@ namespace Evix.Controllers {
       ConcavePolygonShape colliderShape = new ConcavePolygonShape();
       colliderShape.Data = meshVerticies;
       StaticBody colliderBody = new StaticBody();
+      World.Debugger.log($"event2");
       uint ownerID = colliderBody.CreateShapeOwner(colliderBody);
       colliderBody.ShapeOwnerAddShape(ownerID, colliderShape);
       collider = colliderBody;

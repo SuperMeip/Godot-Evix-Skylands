@@ -199,22 +199,13 @@ namespace Evix.Terrain.Collections {
     }
 
     /// <summary>
-    /// Set the mesh data for the chunk
-    /// </summary>
-    /// <param name="mesh"></param>
-    public void setMesh(ChunkMeshData meshData) {
-      if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Loaded) {
-        this.meshData = meshData.arrayMesh == null ? null : meshData;
-      } else throw new System.AccessViolationException($"Attempting to set mesh data on a chunk without the correct aperture lock or resolution level: {currentResolution}");
-    }
-
-    /// <summary>
     /// Set that the chunk node has been meshed in game world for this chunk, or unmesh it
     /// </summary>
-    public void setIsMeshed(bool activeState = true) {
+    public void setMesh(bool activeState = true, ChunkMeshData meshData = null) {
       if (activeState) {
         if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Loaded) {
           currentResolution = Resolution.Meshed;
+          this.meshData = meshData.arrayMesh == null ? null : meshData;
         } else throw new System.AccessViolationException($"Attempting to set a chunk as mehsed on a chunk without the correct aperture lock or resolution level: {currentResolution}");
       } else {
         if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Meshed) {

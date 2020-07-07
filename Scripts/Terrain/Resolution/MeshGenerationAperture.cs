@@ -19,7 +19,7 @@ namespace Evix.Terrain.Resolution {
       if (adjustment.type == FocusAdjustmentType.InFocus) {
         return MarchingTetsMeshGenerator.GetJob(adjustment, lens.level);
       } else {
-        return new DemeshChunkObjectJob(adjustment);
+        return new DemeshChunkObjectJob(adjustment, lens.level);
       }
     }
 
@@ -151,8 +151,14 @@ namespace Evix.Terrain.Resolution {
         get;
       }
 
-      public DemeshChunkObjectJob(Adjustment adjustment) {
+      /// <summary>
+      /// The level we're working on
+      /// </summary>
+      Level level;
+
+      public DemeshChunkObjectJob(Adjustment adjustment, Level level) {
         this.adjustment = adjustment;
+        this.level = level;
       }
 
       /// <summary>
@@ -163,6 +169,10 @@ namespace Evix.Terrain.Resolution {
           new RemoveChunkMeshEvent(adjustment),
           EventSystems.WorldEventSystem.Channels.ChunkActivationUpdates
         );
+
+        Chunk chunk = level.getChunk(adjustment.chunkID);
+        chunk.setMesh(false);
+        chunk.unlock(Chunk.Resolution.Meshed);
       }
     }
 
