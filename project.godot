@@ -19,6 +19,10 @@ config/name="Evix Skylands"
 run/main_scene="res://Scenes/World.tscn"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "mono_debugger" )
+
 [mono]
 
 debugger_agent/wait_for_debugger=true
