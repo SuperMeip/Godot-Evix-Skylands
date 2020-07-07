@@ -59,12 +59,12 @@ namespace Evix.Controllers {
     /// Set the chunk to render. Returns true if the data was set up
     /// </summary>
     public void setChunkMesh(Coordinate chunkID, Chunk chunk) {
+      generatedMesh = chunk.meshData.arrayMesh;
       Mesh = generatedMesh;
-      createCollider(Mesh.GetFaces());
+      createCollider(chunk.meshData.verticies);
 
       isActive = true;
       chunkLocation = chunkID;
-      generatedMesh = chunk.mesh;
       isMeshed = true;
 
       chunk.setIsMeshed();

@@ -260,12 +260,13 @@ namespace Evix.Terrain.MeshGeneration {
       public void doWork() {
         int solidVoxelCount = GetVoxelsToMarchOver(adjustment.chunkID, level, out byte[] voxels);
         ArrayMesh generatedMesh = null;
+        List<Vector3> generatedVerticies = new List<Vector3>();
 
         // only run this if there's voxels to itterate over
         if (solidVoxelCount > 0) {
           MarchOverVoxels(
             voxels,
-            out List<Vector3> generatedVerticies,
+            out generatedVerticies,
             out List<int> generatedTriangles,
             out List<Color> generatedColors
           );
@@ -285,7 +286,7 @@ namespace Evix.Terrain.MeshGeneration {
 
         // mark the chunk mesh data
         Chunk meshedChunk = level.getChunk(adjustment.chunkID);
-        meshedChunk.setMesh(generatedMesh);
+        meshedChunk.setMesh(new ChunkMeshData(generatedMesh, generatedVerticies.ToArray()));
         World.EventSystem.notifyChannelOf(
           new MeshGenerationAperture.ChunkMeshLoadingFinishedEvent(adjustment),
           EventSystems.WorldEventSystem.Channels.ChunkActivationUpdates

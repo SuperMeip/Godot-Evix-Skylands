@@ -1,7 +1,7 @@
 ﻿using Evix.Terrain.DataGeneration;
+using Evix.Terrain.MeshGeneration;
 using Evix.Terrain.Resolution;
 using Evix.Voxels;
-using Godot;
 
 namespace Evix.Terrain.Collections {
 
@@ -32,7 +32,7 @@ namespace Evix.Terrain.Collections {
     /// <summary>
     /// This chunks generated mesh
     /// </summary>
-    public ArrayMesh mesh {
+    public ChunkMeshData meshData {
       get;
       private set;
     } = null;
@@ -56,7 +56,7 @@ namespace Evix.Terrain.Collections {
     /// get if the generated mesh is empty
     /// </summary>
     public bool meshIsEmpty {
-      get => mesh == null;
+      get => meshData == null;
     }
 
     /// <summary>
@@ -190,7 +190,7 @@ namespace Evix.Terrain.Collections {
         // @todo: check if the voxels aren't nulled
         LevelDAO.ChunkSaveData saveData = new LevelDAO.ChunkSaveData(voxels, solidVoxelCount);
         voxels = null;
-        mesh = null;
+        meshData = null;
         solidVoxelCount = 0;
         currentResolution = Resolution.UnLoaded;
 
@@ -202,9 +202,9 @@ namespace Evix.Terrain.Collections {
     /// Set the mesh data for the chunk
     /// </summary>
     /// <param name="mesh"></param>
-    public void setMesh(ArrayMesh mesh) {
+    public void setMesh(ChunkMeshData meshData) {
       if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Loaded) {
-        this.mesh = mesh;
+        this.meshData = meshData.arrayMesh == null ? null : meshData;
       } else throw new System.AccessViolationException($"Attempting to set mesh data on a chunk without the correct aperture lock or resolution level: {currentResolution}");
     }
 
@@ -219,7 +219,7 @@ namespace Evix.Terrain.Collections {
       } else {
         if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Meshed) {
           currentResolution = Resolution.Loaded;
-          mesh = null;
+          meshData = null;
         } else throw new System.AccessViolationException($"Attempting to remove a chunk mesh from a chunk without the correct aperture lock or resolution level: {currentResolution}");
       }
     }

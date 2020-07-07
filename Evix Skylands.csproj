@@ -78,6 +78,7 @@
     <Compile Include="Scripts\Terrain\DataGeneration\Sources\PerlinSource.cs" />
     <Compile Include="Scripts\Terrain\DataGeneration\Sources\VoxelSource.cs" />
     <Compile Include="Scripts\Terrain\MeshGeneration\MarchingTetsMeshGenerator.cs" />
+    <Compile Include="Scripts\Terrain\MeshGeneration\MeshData.cs" />
     <Compile Include="Scripts\Terrain\Resolution\ChunkResolutionAperture.cs" />
     <Compile Include="Scripts\Terrain\Resolution\ChunkVisibilityAperture.cs" />
     <Compile Include="Scripts\Terrain\Resolution\FocusLens.cs" />
