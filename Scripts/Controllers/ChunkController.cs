@@ -18,7 +18,8 @@ namespace Evix.Controllers {
     /// <summary>
     /// If this controller is being used.
     /// </summary>
-    public bool isActive = false;
+    public bool isActive 
+      = false;
 
     /// <summary>
     /// If this chunk has been meshed with chunk data.
@@ -31,18 +32,21 @@ namespace Evix.Controllers {
     /// <summary>
     /// The Manager for the active level.
     /// </summary>
-    LevelManager levelManager;
+    LevelManager levelManager
+      = null;
 
     /// <summary>
     /// The current generated mesh
     /// @TODO: remove this at some point
     /// </summary>
-    ArrayMesh generatedMesh;
+    ChunkMeshData meshData 
+      = null;
 
     /// <summary>
     /// The current collider node
     /// </summary>
-    StaticBody collider;
+    StaticBody collider 
+      = null;
 
     ///// PUBLIC FUNCTIONS
 
@@ -60,8 +64,11 @@ namespace Evix.Controllers {
     /// Set the chunk to render. Returns true if the data was set up
     /// </summary>
     public void setChunkMesh(Coordinate chunkID, Chunk chunk) {
+      meshData = chunk.meshData;
       chunkLocation = chunkID;
-      generatedMesh = chunk.meshData.arrayMesh;
+      Mesh = meshData.arrayMesh;
+      World.Debugger.log($"set mesh with {Mesh.GetFaces().Length} verts on {chunkID}");
+
       isMeshed = true;
       isActive = true;
     }
@@ -74,16 +81,15 @@ namespace Evix.Controllers {
     public void setVisible(bool activeState = true) {
       Chunk chunk = levelManager.level.getChunk(chunkLocation);
       if (activeState) {
-        //levelManager.AddChild(this);
-        //Translation = (chunkLocation.vec3 * MarchingTetsMeshGenerator.BlockSize);
+        levelManager.AddChild(this);
+        Translation = (chunkLocation.vec3 * MarchingTetsMeshGenerator.BlockSize);
         chunk.setVisible();
         chunk.unlock(Chunk.Resolution.Visible);
-        // Mesh = generatedMesh;
-        /*if (collider == null) {
-          createCollider(Mesh.GetFaces());
-        }*/
+        if (collider == null) {
+          createCollider();
+        }
       } else {
-        //clearCollider();
+        clearCollider();
         levelManager.RemoveChild(this);
         chunk.setVisible(false);
         chunk.unlock(Chunk.Resolution.Visible);
@@ -95,7 +101,7 @@ namespace Evix.Controllers {
     /// </summary>
     public void clearAssignedChunk() {
       Mesh = null;
-      generatedMesh = null;
+      meshData = null;
       clearCollider();
       isMeshed = false;
       isActive = false;
@@ -106,13 +112,15 @@ namespace Evix.Controllers {
     /// Create and set the collider
     /// </summary>
     /// <param name="mesh"></param>
-    void createCollider(Vector3[] meshVerticies) {
-      ConcavePolygonShape colliderShape = new ConcavePolygonShape();
-      colliderShape.Data = meshVerticies;
+    void createCollider() {
       StaticBody colliderBody = new StaticBody();
-      World.Debugger.log($"event2");
       uint ownerID = colliderBody.CreateShapeOwner(colliderBody);
-      colliderBody.ShapeOwnerAddShape(ownerID, colliderShape);
+      colliderBody.ShapeOwnerAddShape(
+        ownerID,
+        new ConcavePolygonShape() {
+          Data = meshData.generatedColliderVerts 
+        }
+      );
       collider = colliderBody;
       AddChild(collider);
     }

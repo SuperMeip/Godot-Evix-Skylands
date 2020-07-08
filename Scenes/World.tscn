@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/Managers/WorldManager.cs" type="Script" id=1]
-[ext_resource path="res://Scripts/Managers/LevelManager.cs" type="Script" id=2]
-[ext_resource path="res://Scenes/Chunk.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/Managers/LevelTerrainManager.cs" type="Script" id=2]
 [ext_resource path="res://Scripts/Managers/FocusManager.cs" type="Script" id=4]
 
 [sub_resource type="CubeMesh" id=1]
@@ -10,7 +9,7 @@
 [node name="World" type="Node"]
 script = ExtResource( 1 )
 startingFocus = NodePath("Test Focus")
-levelManagerNode = NodePath("Level")
+levelManagerNode = NodePath("Level/LevelTerrain")
 
 [node name="Test Focus" type="Spatial" parent="."]
 script = ExtResource( 4 )
@@ -22,5 +21,12 @@ material/0 = null
 [node name="Camera" type="Camera" parent="Test Focus"]
 
 [node name="Level" type="Spatial" parent="."]
+
+[node name="LevelTerrain" type="GridMap" parent="Level"]
+data = {
+"cells": PoolIntArray(  )
+}
 script = ExtResource( 2 )
-ChunkNode = ExtResource( 3 )
+__meta__ = {
+"_editor_clip_": 0
+}

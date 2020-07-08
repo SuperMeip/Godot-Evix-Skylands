@@ -70,6 +70,7 @@
     <Compile Include="Scripts\Level.cs" />
     <Compile Include="Scripts\Managers\FocusManager.cs" />
     <Compile Include="Scripts\Managers\LevelManager.cs" />
+    <Compile Include="Scripts\Managers\LevelTerrainManager.cs" />
     <Compile Include="Scripts\Managers\WorldManager.cs" />
     <Compile Include="Scripts\Terrain\Collections\Chunk.cs" />
     <Compile Include="Scripts\Terrain\DataGeneration\BiomeMap.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Scripts\Terrain\DataGeneration\Sources\PerlinSource.cs" />
     <Compile Include="Scripts\Terrain\DataGeneration\Sources\VoxelSource.cs" />
     <Compile Include="Scripts\Terrain\MeshGeneration\MarchingTetsMeshGenerator.cs" />
-    <Compile Include="Scripts\Terrain\MeshGeneration\MeshData.cs" />
+    <Compile Include="Scripts\Terrain\MeshGeneration\ChunkMeshData.cs" />
     <Compile Include="Scripts\Terrain\Resolution\ChunkResolutionAperture.cs" />
     <Compile Include="Scripts\Terrain\Resolution\ChunkVisibilityAperture.cs" />
     <Compile Include="Scripts\Terrain\Resolution\FocusLens.cs" />

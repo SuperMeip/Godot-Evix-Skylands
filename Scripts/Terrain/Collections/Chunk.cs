@@ -205,12 +205,12 @@ namespace Evix.Terrain.Collections {
       if (activeState) {
         if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Loaded) {
           currentResolution = Resolution.Meshed;
-          this.meshData = meshData.arrayMesh == null ? null : meshData;
+          this.meshData = meshData?.arrayMesh == null ? null : meshData;
         } else throw new System.AccessViolationException($"Attempting to set a chunk as mehsed on a chunk without the correct aperture lock or resolution level: {currentResolution}");
       } else {
         if (isLockedForWork && resolutionModificationLockType == Resolution.Meshed && currentResolution == Resolution.Meshed) {
           currentResolution = Resolution.Loaded;
-          meshData = null;
+          this.meshData = null;
         } else throw new System.AccessViolationException($"Attempting to remove a chunk mesh from a chunk without the correct aperture lock or resolution level: {currentResolution}");
       }
     }

@@ -260,19 +260,20 @@ namespace Evix.Terrain.MeshGeneration {
       public void doWork() {
         int solidVoxelCount = GetVoxelsToMarchOver(adjustment.chunkID, level, out byte[] voxels);
         ArrayMesh generatedMesh = null;
-        List<Vector3> generatedVerticies = new List<Vector3>();
+        Vector3[] generatedColliderVerts = null;
 
         // only run this if there's voxels to itterate over
         if (solidVoxelCount > 0) {
           MarchOverVoxels(
             voxels,
-            out generatedVerticies,
+            out List<Vector3> generatedVerticies,
             out List<int> generatedTriangles,
             out List<Color> generatedColors
           );
 
           /// if we have verts, set up the new mesh
           if (generatedVerticies.Count > 0) {
+            // Make the mesh
             var surfaceArray = new Godot.Collections.Array();
             surfaceArray.Resize((int)ArrayMesh.ArrayType.Max);
             surfaceArray[(int)ArrayMesh.ArrayType.Vertex] = generatedVerticies.ToArray();
@@ -281,17 +282,30 @@ namespace Evix.Terrain.MeshGeneration {
 
             generatedMesh = new ArrayMesh();
             generatedMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, surfaceArray);
+
+            // Make the collider verts
+            generatedColliderVerts = new Vector3[generatedTriangles.Count];
+            for(int triangleIndex = 0; triangleIndex < generatedTriangles.Count; triangleIndex++) {
+              generatedColliderVerts[triangleIndex] = generatedVerticies[generatedTriangles[triangleIndex]];
+            }
           }
         }
 
+        // compile the generated data
+        ChunkMeshData generatedChunkMesh = generatedMesh != null
+          ? new ChunkMeshData(generatedMesh, generatedColliderVerts)
+          : null;
+
         // mark the chunk mesh data
         Chunk meshedChunk = level.getChunk(adjustment.chunkID);
-        meshedChunk.setMesh(true, new ChunkMeshData(generatedMesh, generatedVerticies.ToArray()));
+        meshedChunk.setMesh(true, generatedChunkMesh);
         meshedChunk.unlock(Chunk.Resolution.Meshed);
-        World.EventSystem.notifyChannelOf(
-          new MeshGenerationAperture.ChunkMeshLoadingFinishedEvent(adjustment),
-          EventSystems.WorldEventSystem.Channels.ChunkActivationUpdates
-        );
+        if (generatedChunkMesh != null) {
+          World.EventSystem.notifyChannelOf(
+            new MeshGenerationAperture.ChunkMeshLoadingFinishedEvent(adjustment, generatedChunkMesh),
+            EventSystems.WorldEventSystem.Channels.ChunkActivationUpdates
+          );
+        }
       }
     }
 

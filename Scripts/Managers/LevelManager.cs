@@ -11,6 +11,9 @@ namespace Evix.Managers {
 
   public class LevelManager : Spatial, IObserver {
 
+    /// <summary>
+    /// The scene to use as the basis for a chunk
+    /// </summary>
     [Export]
     readonly PackedScene ChunkNode;
 

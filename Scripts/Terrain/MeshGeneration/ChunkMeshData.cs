@@ -17,7 +17,7 @@ namespace Evix.Terrain.MeshGeneration {
     /// <summary>
     /// the verts
     /// </summary>
-    public Vector3[] verticies {
+    public Vector3[] generatedColliderVerts {
       get;
     }
 
@@ -26,9 +26,9 @@ namespace Evix.Terrain.MeshGeneration {
     /// </summary>
     /// <param name="arrayMesh"></param>
     /// <param name="verticies"></param>
-    public ChunkMeshData(ArrayMesh arrayMesh, Vector3[] verticies) {
+    public ChunkMeshData(ArrayMesh arrayMesh, Vector3[] generatedColliderVerts) {
       this.arrayMesh = arrayMesh;
-      this.verticies = verticies;
+      this.generatedColliderVerts = generatedColliderVerts;
     }
   }
 }

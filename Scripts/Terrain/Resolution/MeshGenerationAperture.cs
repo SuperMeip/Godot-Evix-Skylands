@@ -30,7 +30,7 @@ namespace Evix.Terrain.Resolution {
     /// <param name="chunk"></param>
     /// <returns></returns>
     internal override bool isValid(Adjustment adjustment, out Chunk chunk) {
-      if(base.isValid(adjustment, out chunk)) {
+      if (base.isValid(adjustment, out chunk)) {
         if (adjustment.type == FocusAdjustmentType.InFocus) {
           // if it's already meshed, we can drop it from the job queue
           if (chunk.currentResolution == Chunk.Resolution.Meshed && adjustment.resolution == Chunk.Resolution.Meshed) {
@@ -45,7 +45,7 @@ namespace Evix.Terrain.Resolution {
           if (chunk.currentResolution == Chunk.Resolution.Loaded) {
             /// if it's loaded and solid, check if all the chunks that block it are solid. If they are we can ignore this chunk
             if (chunk.isSolid) {
-            bool allBlockingNeighborsAreSolid = true;
+              bool allBlockingNeighborsAreSolid = true;
               MarchingTetsMeshGenerator.ForEachRequiredNeighbor(adjustment.chunkID, lens.level, neighbor => {
                 if (neighbor.currentResolution >= Chunk.Resolution.Loaded && !neighbor.isSolid) {
                   allBlockingNeighborsAreSolid = false;
@@ -83,7 +83,7 @@ namespace Evix.Terrain.Resolution {
 
           /// if the chunk is loaded and passed the solid and empty tests, it's valid
           return true;
-        /// if this chunk is going out of focus and wasn't loaded to meshed level, we can just drop it.  
+          /// if this chunk is going out of focus and wasn't loaded to meshed level, we can just drop it.  
         } else if (chunk.currentResolution < Chunk.Resolution.Meshed) {
           return false;
         }
@@ -107,7 +107,7 @@ namespace Evix.Terrain.Resolution {
       /// if the chunk has it's data loaded, lets check it's nessisary neighbors
       if (validChunk.currentResolution >= Chunk.Resolution.Loaded) {
         bool necessaryNeighborsAreLoaded = true;
-        bool blockingNeighborsAreSolid   = validChunk.isSolid;
+        bool blockingNeighborsAreSolid = validChunk.isSolid;
         MarchingTetsMeshGenerator.ForEachRequiredNeighbor(adjustment.chunkID, lens.level, neighbor => {
           // check if they're loaded
           if (neighbor.currentResolution < Chunk.Resolution.Loaded) {
@@ -184,6 +184,7 @@ namespace Evix.Terrain.Resolution {
     /// Event notifying the level controller that a chunk mesh is ready
     /// </summary>
     public struct ChunkMeshLoadingFinishedEvent : IEvent {
+
       public string name {
         get;
       }
@@ -195,8 +196,16 @@ namespace Evix.Terrain.Resolution {
         get;
       }
 
-      public ChunkMeshLoadingFinishedEvent(Adjustment adjustment) {
+      /// <summary>
+      /// The chunk mesh made from the job
+      /// </summary>
+      public ChunkMeshData generatedChunkMesh {
+        get;
+      }
+
+      public ChunkMeshLoadingFinishedEvent(Adjustment adjustment, ChunkMeshData generatedChunkMesh) {
         this.adjustment = adjustment;
+        this.generatedChunkMesh = generatedChunkMesh;
         name = $"Chunk mesh finished generating for {adjustment.chunkID}";
       }
     }
