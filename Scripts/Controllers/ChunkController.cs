@@ -62,9 +62,8 @@ namespace Evix.Controllers {
     public void setChunkMesh(Coordinate chunkID, Chunk chunk) {
       chunkLocation = chunkID;
       generatedMesh = chunk.meshData.arrayMesh;
-      Mesh = generatedMesh;
-      isActive = true;
       isMeshed = true;
+      isActive = true;
     }
 
     /// <summary>
@@ -79,6 +78,7 @@ namespace Evix.Controllers {
         //Translation = (chunkLocation.vec3 * MarchingTetsMeshGenerator.BlockSize);
         chunk.setVisible();
         chunk.unlock(Chunk.Resolution.Visible);
+        // Mesh = generatedMesh;
         /*if (collider == null) {
           createCollider(Mesh.GetFaces());
         }*/
